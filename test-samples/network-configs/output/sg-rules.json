@@ -1,0 +1,40 @@
+{
+  "resource": {
+    "aws_security_group_rule": {
+      "instance-ssh": {
+        "cidr_blocks": ["0.0.0.0/0"],
+        "from_port": 22,
+        "lifecycle": {
+          "create_before_destroy": true
+        },
+        "protocol": "TCP",
+        "security_group_id": "${aws_security_group.test-sg.id}",
+        "to_port": 22,
+        "type": "ingress"
+      },
+      "outbound-traffic": {
+        "cidr_blocks": ["0.0.0.0/0"],
+        "from_port": 0,
+        "lifecycle": {
+          "create_before_destroy": true
+        },
+        "protocol": "-1",
+        "security_group_id": "${aws_security_group.test-sg.id}",
+        "to_port": 0,
+        "type": "egress"
+      },
+      "test-cluster-traffic": {
+        "cidr_blocks": ["10.0.0.0/16"],
+        "from_port": 0,
+        "lifecycle": {
+          "create_before_destroy": true
+        },
+        "protocol": "-1",
+        "security_group_id": "${aws_security_group.test-sg.id}",
+        "to_port": 0,
+        "type": "ingress"
+      }
+    }
+  }
+}
+
