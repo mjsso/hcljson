@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"strings"
 
 	hcl "github.com/hashicorp/hcl/v2"
@@ -157,8 +158,12 @@ func (c *converter) convertBlock(block *hclsyntax.Block, out jsonObj) error {
 	// For consistency, always wrap the value in a collection.
 	// When multiple values are at the same key
 	if current, exists := out[key]; exists {
-		// TODO : 중복된 키값이 존재하는 경우가 있는지 확인해보기.
-		// 만약 있다면 이 부분도 수정해야함. append해야된다면 처음 value붙일 때도 배열로 붙여야 함.
+		// MEMO: Provider의 경우 중복된 키값으로 선언됨. 그럴 땐 terraform json syntax에 맞게 작성 되도록 처리해줌
+		if reflect.TypeOf(out[key]) == reflect.TypeOf(map[string]interface{}{}) {
+			var firstValue = out[key]
+			out[key] = []interface{}{firstValue}
+			current = out[key]
+		}
 		out[key] = append(current.([]interface{}), value)
 	} else {
 		// out[key] = []interface{}{value}

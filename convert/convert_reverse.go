@@ -4,12 +4,11 @@ import (
 	"bytes"
 	"fmt"
 
-	hclprinter "github.com/hashicorp/hcl/hcl/printer"
-	jsonParser "github.com/hashicorp/hcl/json/parser"
-	"github.com/hashicorp/hcl/v2/hclparse"
+	jsonParser "github.com/mjsso/hcljson/parser"
+	hclprinter "github.com/mjsso/hcljson/printer"
+	// hclprinter "github.com/hashicorp/hcl/hcl/printer"
+	// jsonParser "github.com/hashicorp/hcl/json/parser"
 )
-
-var parser = hclparse.NewParser()
 
 func JsonToHcl(input []byte) []byte {
 	bytes, err := convertJsonToHcl(input)

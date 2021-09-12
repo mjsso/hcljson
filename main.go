@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/gopherjs/gopherjs/js"
+	"github.com/hashicorp/hcl/v2/hclparse"
 	"github.com/mjsso/hcljson/convert"
 	"github.com/tidwall/pretty"
 )
@@ -21,10 +22,14 @@ const (
 	ErrorColor   = "\033[1;31m[Error]\033[0m"
 )
 
+var parser = hclparse.NewParser()
+
 func main() {
 	js.Module.Get("exports").Set("HclToJson", convert.HclToJson)
 	js.Module.Get("exports").Set("JsonToHcl", convert.JsonToHcl)
 	// convertHclTest()
+	// printTest()
+
 }
 
 func convertHclTest() {
@@ -66,4 +71,36 @@ func convertHclTest() {
 			fmt.Fprintf(target, "%s\n", prettyJson)
 		}
 	}
+}
+
+func printTest() {
+
+	var sample = `{
+		"resource": {
+		  "aws_instance": {
+			"ubuntu-ssh-server": {
+			  "tags": {
+				"Name": "test-instance"
+			  },
+			  
+			  "ami": "${ddf.dfdf.dfd}"
+			}
+		  }
+		}
+	  }
+	  `
+
+	bytesResult := convert.JsonToHcl([]byte(sample))
+
+	target := os.Stdout
+	var outputFileDir = "/home/smj/mjParser/mjOutput/"
+	if _, err := os.Stat(outputFileDir); os.IsNotExist(err) {
+		os.Mkdir(outputFileDir, 0755)
+	}
+	var outputFile = filepath.Join(outputFileDir, "config.tf")
+	target, err := os.OpenFile(outputFile, os.O_TRUNC|os.O_CREATE|os.O_WRONLY, os.ModePerm)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Fprintf(target, "%s\n", bytesResult)
 }
