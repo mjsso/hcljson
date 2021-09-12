@@ -4,6 +4,8 @@ import (
 	"github.com/hashicorp/hcl/hcl/ast"
 )
 
+// MEMO : https://github.com/hashicorp/hcl/tree/hcl1/json/parser가 원본. 코드 수정해서 사용하기 위해 카피 함.
+
 // flattenObjects takes an AST node, walks it, and flattens
 func flattenObjects(node ast.Node) {
 	ast.Walk(node, func(n ast.Node) (ast.Node, bool) {
@@ -92,6 +94,7 @@ func flattenObjectType(
 
 	for _, subitem := range ot.List.Items {
 		if _, ok := subitem.Val.(*ast.ObjectType); !ok {
+			// MEMO : provider 키워드로 하위에 들어가있는 정의가 배열형태일 땐 각각을 provider '레이블' {} 블럭으로 생성해줘야 돼서 그 예외처리 부분 추가함.
 			if item.Keys[0].Token.Text == "\"provider\"" {
 				if !contains(items, item) && len(item.Keys) > 1 {
 					items = append(items, item)

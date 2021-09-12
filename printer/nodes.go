@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/hcl/hcl/token"
 )
 
+// MEMO : https://github.com/hashicorp/hcl/tree/hcl1/hcl/printer 가 원본. 코드 수정해서 사용하기 위해 카피 함.
 const (
 	blank    = byte(' ')
 	newline  = byte('\n')
